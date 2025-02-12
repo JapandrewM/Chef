@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
+  <style>
+    #grid-container {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+    .card-item {
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pretty Print Details</h1>
+  <div id="grid-container"></div>
+  <script>
+    const t = TrelloPowerUp.iframe();
+    const gridContainer = document.getElementById('grid-container');
+
+    t.get('board', 'shared', 'prettyPrintSettings').then(settings => {
+      const numRows = settings?.numRows || 2;
+      const numColumns = settings?.numColumns || 3;
+      gridContainer.style.gridTemplateColumns = `repeat(${numColumns}, 1fr)`;
+      gridContainer.style.gridTemplateRows = `repeat(${numRows}, auto)`;
+    });
+
+    t.args.then(args => {
+      const data = args.data;
+      data.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card-item');
+        cardElement.textContent = JSON.stringify(card, null, 2);
+        gridContainer.appendChild(cardElement);
+      });
+    });
+
+    t.render(() => {
+      t.sizeTo('#grid-container').done();
+    });
+  </script>
+</body>
+</html>

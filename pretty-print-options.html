@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://p.trellocdn.com/power-up.min.js"></script>
+</head>
+<body>
+  <h2>Pretty Print Options</h2>
+  <label>
+    <input type="checkbox" id="showBadges" /> Show Card Badges
+  </label>
+  <br>
+  <label>
+    Rows: <input type="number" id="numRows" min="1" value="2" />
+  </label>
+  <br>
+  <label>
+    Columns: <input type="number" id="numColumns" min="1" value="3" />
+  </label>
+  <br>
+  <button id="saveSettings">Save Settings</button>
+
+  <script>
+    const t = TrelloPowerUp.iframe();
+
+    document.getElementById('saveSettings').addEventListener('click', function() {
+      const showBadges = document.getElementById('showBadges').checked;
+      const numRows = parseInt(document.getElementById('numRows').value, 10);
+      const numColumns = parseInt(document.getElementById('numColumns').value, 10);
+      t.set('board', 'shared', 'prettyPrintSettings', { showBadges, numRows, numColumns }).then(() => {
+        t.closePopup();
+      });
+    });
+
+    t.render(function() {
+      t.get('board', 'shared', 'prettyPrintSettings').then(settings => {
+        document.getElementById('showBadges').checked = settings?.showBadges || false;
+        document.getElementById('numRows').value = settings?.numRows || 2;
+        document.getElementById('numColumns').value = settings?.numColumns || 3;
+      });
+    });
+  </script>
+</body>
+</html>
